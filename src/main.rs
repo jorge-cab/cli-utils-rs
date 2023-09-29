@@ -27,11 +27,23 @@ mod tests {
         let args = vec!["nil", "arg0"];
         let result = run_echo(args.into_iter().map(|elm| String::from(elm)));
 
-        assert_eq!(result, vec!["arg0"].into_iter().map(|elm| String::from(elm)).collect::<Vec<String>>());
+        assert_eq!(
+            result,
+            vec!["arg0"]
+                .into_iter()
+                .map(|elm| String::from(elm))
+                .collect::<Vec<String>>()
+        );
 
         let args = vec!["nil", "arg0", "arg1", "arg2"];
         let result = run_echo(args.into_iter().map(|elm| String::from(elm)));
 
-        assert_eq!(result, vec!["arg0", "arg1", "arg2"].into_iter().map(|elm| String::from(elm)).collect::<Vec<String>>());
+        assert_eq!(
+            result,
+            vec!["arg0", "arg1", "arg2"]
+                .into_iter()
+                .map(|elm| String::from(elm))
+                .collect::<Vec<String>>()
+        );
     }
 }
