@@ -8,13 +8,13 @@ pub fn run_echo(mut args: impl Iterator<Item = String>) -> Vec<String> {
     return output;
 }
 
-pub fn bin_selector(mut args: impl Iterator<Item = String>) {
+pub fn bin_selector(mut args: impl Iterator<Item = String>) -> Result<String, String> {
     args.next();
 
     match args.next() {
-        Some(arg) if arg == "echo" => println!("{}", run_echo(args).join(" ")),
-        Some(arg) => eprintln!("Invalid Command: {}", arg),
-        None => eprintln!("No arguments received!"),
+        Some(arg) if arg == "echo" => Ok(run_echo(args).join(" ")),
+        Some(arg) => Err(format!("Invalid Command: {}", arg)),
+        None => Err(String::from("No arguments received!")),
     }
 }
 
@@ -46,5 +46,14 @@ mod tests {
                 .map(|elm| String::from(elm))
                 .collect::<Vec<String>>()
         );
+    }
+
+    #[test]
+    fn bin_selector_test() {
+        let args = vec!["nil", "echo", "asdf"];
+
+        let result = bin_selector(args.into_iter().map(|elm| String::from(elm)));
+
+        assert_eq!("asdf", result.unwrap());
     }
 }
