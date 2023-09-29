@@ -1,5 +1,4 @@
 pub fn run_echo(mut args: impl Iterator<Item = String>) -> Vec<String> {
-    args.next();
     let mut output: Vec<String> = Vec::new();
 
     while let Some(arg) = args.next() {
@@ -9,6 +8,16 @@ pub fn run_echo(mut args: impl Iterator<Item = String>) -> Vec<String> {
     return output;
 }
 
+pub fn bin_selector(mut args: impl Iterator<Item = String>) {
+    args.next();
+
+    match args.next() {
+        Some(arg) if arg == "echo" => println!("{}", run_echo(args).join(" ")),
+        Some(arg) => eprintln!("Invalid Command: {}", arg),
+        None => eprintln!("No arguments received!"),
+    }
+}
+
 #[cfg(test)]
 mod tests {
 
@@ -16,7 +25,7 @@ mod tests {
 
     #[test]
     fn echo_test() {
-        let args = vec!["nil", "arg0"];
+        let args = vec!["arg0"];
         let result = run_echo(args.into_iter().map(|elm| String::from(elm)));
 
         assert_eq!(
@@ -27,7 +36,7 @@ mod tests {
                 .collect::<Vec<String>>()
         );
 
-        let args = vec!["nil", "arg0", "arg1", "arg2"];
+        let args = vec!["arg0", "arg1", "arg2"];
         let result = run_echo(args.into_iter().map(|elm| String::from(elm)));
 
         assert_eq!(
