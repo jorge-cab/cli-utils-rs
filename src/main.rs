@@ -1,10 +1,12 @@
 use std::env;
 
 fn main() {
-    echo_function(env::args());
+    let output = run_echo(env::args());
+
+    println!("{}", output.join(" "));
 }
 
-fn echo_function(mut args: impl Iterator<Item = String>) {
+pub fn run_echo(mut args: impl Iterator<Item = String>) -> Vec<String> {
     args.next();
     let mut output: Vec<String> = Vec::new();
 
@@ -12,5 +14,19 @@ fn echo_function(mut args: impl Iterator<Item = String>) {
         output.push(arg);
     }
 
-    println!("{}", output.join(" "));
+    return output;
+}
+
+#[cfg(test)]
+mod tests {
+
+    use super::*;
+
+    #[test]
+    fn echo_test() {
+        let args = vec!["nil", "arg0"];
+        let result = run_echo(args.into_iter().map(|elm| String::from(elm)));
+
+        assert_eq!(result, vec![String::from("arg0")]);
+    }
 }
