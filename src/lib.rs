@@ -1,3 +1,5 @@
+use std::fs;
+
 pub fn run_echo(mut args: impl Iterator<Item = String>) -> Vec<String> {
     let mut output: Vec<String> = Vec::new();
 
@@ -8,13 +10,25 @@ pub fn run_echo(mut args: impl Iterator<Item = String>) -> Vec<String> {
     return output;
 }
 
-pub fn bin_selector(mut args: impl Iterator<Item = String>) -> Result<String, String> {
-    args.next();
+pub fn run_cat(mut args: impl Iterator<Item = String>) -> Result<String, &'static str> {
+    let file_path = match args.next() {
+        Some(arg) => arg,
+        None => return Err("Didn't get a filepath"),
+    };
 
+    if let Ok(content) = fs::read_to_string(file_path) {
+        return Ok(content);
+    } else {
+        return Err("File does not exist.");
+    };
+}
+
+pub fn bin_selector(mut args: impl Iterator<Item = String>) -> Result<String, &'static str> {
     match args.next() {
         Some(arg) if arg == "echo" => Ok(run_echo(args).join(" ")),
-        Some(arg) => Err(format!("Invalid Command: {}", arg)),
-        None => Err(String::from("No arguments received!")),
+        Some(arg) if arg == "cat" => run_cat(args),
+        Some(_) => Err("Invalid Command"),
+        None => Err("No arguments received!"),
     }
 }
 
@@ -50,7 +64,7 @@ mod tests {
 
     #[test]
     fn bin_selector_test() {
-        let args = vec!["nil", "echo", "asdf"];
+        let args = vec!["echo", "asdf"];
 
         let result = bin_selector(args.into_iter().map(|elm| String::from(elm)));
 
