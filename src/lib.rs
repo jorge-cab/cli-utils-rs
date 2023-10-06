@@ -9,6 +9,7 @@ pub fn bin_selector(mut args: impl Iterator<Item = String>) -> Result<String, Ap
     match args.next() {
         Some(arg) if arg == "echo" => Ok(run_echo(args).join(" ")),
         Some(arg) if arg == "cat" => run_cat(args),
+        Some(arg) if arg == "ls" => Ok(run_ls(args)?.join(" ")),
         Some(_) => Err(AppError::InvalidCommand),
         None => Err(AppError::NoArgumentsReceived),
     }
